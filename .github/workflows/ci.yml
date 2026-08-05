@@ -1,15 +1,17 @@
 name: CI
 
+# Pull requests only. A `push` trigger as well would run this twice for every
+# commit on a branch that has a PR open — same commit, same result, double the
+# minutes. Pushes to main are covered by the Deploy workflow, which type-checks
+# and builds before it publishes.
 on:
   pull_request:
-  push:
-    branches-ignore: [main]
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
