@@ -1,0 +1,53 @@
+---
+import AboutSection from '../components/AboutSection.astro';
+import ChannelRow from '../components/ChannelRow.astro';
+import EventsSection from '../components/EventsSection.astro';
+import GallerySection from '../components/GallerySection.astro';
+import Hero from '../components/Hero.astro';
+import Newsletter from '../components/Newsletter.astro';
+import NewsSection from '../components/NewsSection.astro';
+import SpeakCta from '../components/SpeakCta.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { getNextEvent, getUpcomingEvents, rsvpLink } from '../lib/events';
+
+const nextEvent = await getNextEvent();
+const upcoming = await getUpcomingEvents();
+
+/**
+ * schema.org Event entries so the meetups can surface in search results and
+ * calendar-aware assistants.
+ */
+const eventSchema = upcoming.map((event) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: event.data.title,
+  description: event.data.blurb,
+  startDate: event.data.startsAt.toISOString(),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: event.data.venue,
+    address: { '@type': 'PostalAddress', addressLocality: 'Gold Coast', addressRegion: 'QLD', addressCountry: 'AU' },
+  },
+  organizer: { '@type': 'Organization', name: site.name, url: site.url },
+  url: rsvpLink(event),
+  isAccessibleForFree: true,
+}));
+---
+
+<BaseLayout title={`${site.name} — free monthly AWS meetups`} bare>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(eventSchema)} is:inline />
+  </Fragment>
+
+  <Hero nextEvent={nextEvent} />
+  <ChannelRow />
+  <EventsSection />
+  <NewsSection />
+  <AboutSection />
+  <GallerySection />
+  <SpeakCta />
+  <Newsletter />
+</BaseLayout>

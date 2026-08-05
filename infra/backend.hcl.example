@@ -1,0 +1,21 @@
+# Copy to backend.hcl and adjust, then:  terraform init -backend-config=backend.hcl
+#
+# The state bucket has to exist before the first init. Create it once:
+#
+#   aws s3api create-bucket \
+#     --bucket aws-ug-goldcoast-tfstate-<account-id> \
+#     --region ap-southeast-2 \
+#     --create-bucket-configuration LocationConstraint=ap-southeast-2
+#   aws s3api put-bucket-versioning \
+#     --bucket aws-ug-goldcoast-tfstate-<account-id> \
+#     --versioning-configuration Status=Enabled
+#   aws s3api put-public-access-block \
+#     --bucket aws-ug-goldcoast-tfstate-<account-id> \
+#     --public-access-block-configuration \
+#       BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+
+bucket       = "aws-ug-goldcoast-tfstate-<account-id>"
+key          = "site/terraform.tfstate"
+region       = "ap-southeast-2"
+encrypt      = true
+use_lockfile = true

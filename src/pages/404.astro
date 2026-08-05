@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="Page not found" description="That page doesn't exist.">
+  <article class="wrap prose">
+    <h1>404 — nothing here</h1>
+    <p class="prose__lede">
+      That link has gone the way of an untagged EC2 instance. Try the
+      <a href="/">home page</a>, or head straight to
+      <a href={site.rsvpUrl} target="_blank" rel="noopener">our Meetup page</a>
+      for the next event.
+    </p>
+  </article>
+</BaseLayout>

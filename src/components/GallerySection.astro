@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+
+import { galleryPhotos, hasGallery } from '../lib/gallery';
+---
+
+{
+  hasGallery && (
+    <section id="gallery" class="wrap section">
+      <h2 class="section-title">
+        From past <strong>meetups</strong>
+      </h2>
+
+      <div class="gallery">
+        {galleryPhotos.map((photo) => (
+          <figure class="gallery__item">
+            <Image src={photo.image} alt={photo.alt} width={720} loading="lazy" />
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}

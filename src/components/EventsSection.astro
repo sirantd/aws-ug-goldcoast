@@ -1,0 +1,34 @@
+---
+import EventCard from './EventCard.astro';
+import { site } from '../data/site';
+import { getUpcomingEvents } from '../lib/events';
+
+const events = await getUpcomingEvents();
+---
+
+<section id="events" class="wrap section section--lead">
+  <div class="section-head">
+    <h2 class="section-title">Upcoming <strong>events</strong></h2>
+    <a class="section-link" href={site.calendarUrl} target="_blank" rel="noopener">
+      full calendar on Luma →
+    </a>
+  </div>
+
+  {
+    events.length > 0 ? (
+      <div class="card-grid">
+        {events.map((event) => (
+          <EventCard event={event} />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">
+        Nothing on the calendar right now — the next date lands soon.{' '}
+        <a href={site.rsvpUrl} target="_blank" rel="noopener">
+          Follow us on Meetup
+        </a>{' '}
+        to hear first.
+      </p>
+    )
+  }
+</section>

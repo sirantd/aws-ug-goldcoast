@@ -1,0 +1,48 @@
+---
+import { formatEventDate, formatEventTime, rsvpLink, type Event } from '../lib/events';
+
+interface Props {
+  event: Event;
+  /** Past events link to a recap instead of an RSVP. */
+  past?: boolean;
+}
+
+const { event, past = false } = Astro.props;
+const { title, startsAt, venue, venueUrl, blurb, recapUrl } = event.data;
+---
+
+<article class="event">
+  <p class="event__when">
+    <time datetime={startsAt.toISOString()}>
+      {formatEventDate(startsAt)} · {formatEventTime(startsAt)}
+    </time>
+  </p>
+
+  <h3 class="event__title">{title}</h3>
+  <p class="event__blurb">{blurb}</p>
+
+  <div class="event__meta">
+    <span class="event__venue">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"
+        ></path>
+      </svg>
+      {venueUrl ? <a href={venueUrl} target="_blank" rel="noopener">{venue}</a> : venue}
+    </span>
+
+    {
+      past
+        ? recapUrl && (
+            <a class="event__rsvp" href={recapUrl} target="_blank" rel="noopener">
+              Watch →
+            </a>
+          )
+        : (
+            <a class="event__rsvp" href={rsvpLink(event)} target="_blank" rel="noopener">
+              RSVP →
+            </a>
+          )
+    }
+  </div>
+</article>

@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+
+import { channels } from '../data/channels';
+import { site } from '../data/site';
+import badge from '../assets/brand/hex-badge.png';
+
+const domain = new URL(site.url).host;
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <Image src={badge} alt="" width={80} densities={[1, 2]} />
+        <div>
+          {site.name}<br />
+          <span class="footer__domain">{domain}</span>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        {
+          channels.map((channel) => (
+            <a href={channel.url} target="_blank" rel="noopener">
+              {channel.name}
+            </a>
+          ))
+        }
+        <a class="is-quiet" href="/code-of-conduct">Code of conduct</a>
+      </div>
+    </div>
+
+    <p class="footer__legal">
+      Community-run · Not affiliated with Amazon Web Services, Inc.
+    </p>
+  </div>
+</footer>

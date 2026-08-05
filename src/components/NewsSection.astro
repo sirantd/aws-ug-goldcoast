@@ -1,0 +1,44 @@
+---
+import { render } from 'astro:content';
+
+import { formatNewsDate, getNews } from '../lib/events';
+
+const news = await getNews(6);
+const rendered = await Promise.all(
+  news.map(async (item) => ({ item, Content: (await render(item)).Content })),
+);
+---
+
+{
+  rendered.length > 0 && (
+    <section id="news" class="wrap section">
+      <h2 class="section-title">
+        News &amp; <strong>announcements</strong>
+      </h2>
+
+      <div class="news">
+        {rendered.map(({ item, Content }) => (
+          <article class="news__item">
+            <time class="news__date" datetime={item.data.date.toISOString()}>
+              {formatNewsDate(item.data.date)}
+            </time>
+            <div>
+              <h3 class="news__title">
+                {item.data.url ? (
+                  <a href={item.data.url} target="_blank" rel="noopener">
+                    {item.data.title}
+                  </a>
+                ) : (
+                  item.data.title
+                )}
+              </h3>
+              <div class="news__body">
+                <Content />
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}

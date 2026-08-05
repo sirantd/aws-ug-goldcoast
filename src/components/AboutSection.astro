@@ -1,0 +1,43 @@
+---
+import { initials, organisers } from '../data/organisers';
+---
+
+<section id="about" class="about">
+  <div class="wrap about__inner">
+    <div>
+      <h2 class="section-title about__title">About the <strong>group</strong></h2>
+
+      <p class="about__text">
+        We're a community of cloud engineers, developers, students and founders on the Gold
+        Coast who meet monthly to share what we're building on AWS. Talks range from
+        first-deployment stories to deep dives on serverless, data and AI — always free,
+        always beginner-friendly.
+      </p>
+      <p class="about__text">Run by volunteers, supported by AWS Community programs.</p>
+
+      <a class="about__link" href="/code-of-conduct">Code of conduct →</a>
+    </div>
+
+    <ul class="organisers">
+      {
+        organisers.map((organiser) => (
+          <li class="organiser">
+            <span class="organiser__avatar" aria-hidden="true">
+              {initials(organiser.name)}
+            </span>
+            <span class="organiser__name">
+              {organiser.url ? (
+                <a href={organiser.url} target="_blank" rel="noopener">
+                  {organiser.name}
+                </a>
+              ) : (
+                organiser.name
+              )}
+            </span>
+            <span class="organiser__role">{organiser.role}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

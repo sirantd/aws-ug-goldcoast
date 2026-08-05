@@ -1,0 +1,38 @@
+---
+import { site } from '../data/site';
+
+// Static hosting cannot handle a form POST itself, so the section only appears
+// once an external provider endpoint is configured in src/data/site.ts.
+const { actionUrl, emailField } = site.newsletter;
+---
+
+{
+  actionUrl && (
+    <section class="newsletter">
+      <h2 class="newsletter__title">
+        Stay in the <strong>loop</strong>
+      </h2>
+      <p class="newsletter__text">
+        One email a month — next event, recap, community news. No spam.
+      </p>
+
+      <form class="newsletter__form" action={actionUrl} method="post" target="_blank">
+        <label class="visually-hidden" for="newsletter-email">
+          Email address
+        </label>
+        <input
+          class="newsletter__input"
+          id="newsletter-email"
+          type="email"
+          name={emailField}
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        />
+        <button class="btn btn--ink" type="submit">
+          Subscribe
+        </button>
+      </form>
+    </section>
+  )
+}

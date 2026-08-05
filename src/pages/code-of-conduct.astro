@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const title = 'Code of conduct';
+const description = `How we keep ${site.name} welcoming, and how to report a problem.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="wrap prose">
+    <h1>Code of conduct</h1>
+
+    <p class="prose__lede">
+      Everyone should be able to turn up, ask a beginner question and go home having learned
+      something. This page sets out what that requires of all of us.
+    </p>
+
+    <h2>The short version</h2>
+    <p>
+      Be decent to each other. Assume good faith. Leave people better off than you found
+      them.
+    </p>
+
+    <h2>Expected behaviour</h2>
+    <ul>
+      <li>Be respectful and considerate in talks, questions, chat and hallway conversation.</li>
+      <li>
+        Remember that experience levels vary enormously. There are no stupid questions at
+        this meetup.
+      </li>
+      <li>Give feedback on ideas and code, not on people.</li>
+      <li>Respect the venue, its staff and its rules.</li>
+      <li>Ask before photographing or recording someone, and respect a "no".</li>
+    </ul>
+
+    <h2>Unacceptable behaviour</h2>
+    <ul>
+      <li>
+        Harassment or discrimination based on gender, gender identity or expression, sexual
+        orientation, disability, neurotype, physical appearance, body size, race, ethnicity,
+        nationality, age, religion, or experience level.
+      </li>
+      <li>Sexual language or imagery, and unwelcome sexual attention of any kind.</li>
+      <li>Deliberate intimidation, stalking, or following.</li>
+      <li>Sustained disruption of talks or other events.</li>
+      <li>Publishing others' private information without explicit permission.</li>
+      <li>Recruiting or selling to attendees who have not invited it.</li>
+    </ul>
+
+    <h2>Reporting</h2>
+    <p>
+      If you experience or witness anything that breaks this code — or anything that just
+      feels off — tell an organiser. We are the people wearing the group's badge, and we would
+      much rather hear about something small than find out later it became something large.
+    </p>
+    <p>
+      You can also email us at <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      Reports go only to the organiser team, and we will not share your identity with the
+      person reported without your agreement.
+    </p>
+
+    <h2>What happens next</h2>
+    <p>
+      Organisers will listen, take the report seriously, and decide on a response. Depending
+      on the severity that may be a quiet word, a request to stop, removal from the event, or
+      a ban from future events. Where a venue's own policies apply, or where someone is in
+      danger, we will involve venue staff or emergency services.
+    </p>
+
+    <h2>Scope</h2>
+    <p>
+      This code applies at our meetups and social events, and in any online space the group
+      runs — Meetup comments, LinkedIn, chat and our YouTube channel included.
+    </p>
+
+    <h2>Credit</h2>
+    <p>
+      Adapted from the
+      <a href="https://www.contributor-covenant.org/" target="_blank" rel="noopener">
+        Contributor Covenant
+      </a>
+      and the
+      <a href="https://aws.amazon.com/developer/community/community-builders/" target="_blank" rel="noopener">
+        AWS Community
+      </a>
+      guidelines. Reuse it freely.
+    </p>
+  </article>
+</BaseLayout>

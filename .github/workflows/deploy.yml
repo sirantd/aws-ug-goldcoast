@@ -1,0 +1,82 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# OIDC only — the deploy role is assumed with a short-lived token, so there are
+# no AWS keys stored on the repository.
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Assume deploy role
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: github-deploy-${{ github.run_id }}
+
+      # Fingerprinted assets first, so every object a new page references is in
+      # place before the HTML that points at it goes live.
+      - name: Upload immutable assets
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}/" \
+            --no-progress \
+            --exclude '*' --include '_astro/*' \
+            --cache-control 'public, max-age=31536000, immutable'
+
+      # Then the HTML and root-level files, pruning anything no longer built.
+      # `_astro/` is excluded from the prune: a visitor mid-navigation may still
+      # be fetching assets referenced by the previous build.
+      - name: Upload pages
+        run: |
+          aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}/" \
+            --no-progress --delete \
+            --exclude '_astro/*' \
+            --cache-control 'public, max-age=300, must-revalidate'
+
+      - name: Invalidate CloudFront
+        run: |
+          ID=$(aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths '/*' \
+            --query 'Invalidation.Id' --output text)
+          echo "Invalidation $ID created"
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --id "$ID"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deployed"
+            echo
+            echo "- commit: \`${GITHUB_SHA::7}\`"
+            echo "- bucket: \`${{ vars.S3_BUCKET }}\`"
+            echo "- distribution: \`${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,20 @@
+---
+import { channels } from '../data/channels';
+---
+
+<div class="channels">
+  <ul class="channels__list">
+    {
+      channels.map((channel) => (
+        <li>
+          <a class="channels__link" href={channel.url} target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={channel.icon} />
+            </svg>
+            {channel.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

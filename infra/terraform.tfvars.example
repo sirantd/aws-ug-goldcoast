@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars and adjust. Everything here has a working default;
+# override only what differs for your account.
+
+# region                    = "ap-southeast-2"
+# domain_name               = "aws-ug-goldcoast.com.au"
+# subject_alternative_names = ["www.aws-ug-goldcoast.com.au"]
+# github_repository         = "sirantd/aws-ug-goldcoast"
+
+# Set to false if this AWS account already has a GitHub Actions OIDC provider.
+# create_github_oidc_provider = true
+
+# CloudFront access logs cost money to store; on only when you need them.
+# enable_access_logs = false

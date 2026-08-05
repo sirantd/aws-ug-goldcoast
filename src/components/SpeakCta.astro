@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+
+import { site } from '../data/site';
+import skyline from '../assets/brand/skyline-navy.png';
+---
+
+<section id="speak" class="wrap section">
+  <div class="speak__panel">
+    <Image class="speak__skyline" src={skyline} alt="" width={620} loading="lazy" />
+
+    <div class="speak__copy">
+      <h2 class="speak__title">Got a story to tell?</h2>
+      <p class="speak__text">
+        First-time speakers welcome. Lightning talks (5 min) or full sessions (25 min) —
+        we'll help you shape it.
+      </p>
+    </div>
+
+    <a class="btn btn--ink" href={site.proposeTalkUrl}>Propose a talk →</a>
+  </div>
+</section>

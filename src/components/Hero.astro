@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+
+import { site } from '../data/site';
+import { formatEventDate, rsvpLink, type Event } from '../lib/events';
+import badge from '../assets/brand/hex-badge.png';
+import skyline from '../assets/brand/skyline-gold.png';
+
+interface Props {
+  nextEvent: Event | null;
+}
+
+const { nextEvent } = Astro.props;
+---
+
+<header class="hero">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <span class="hero__plus" aria-hidden="true">+</span>
+  <span class="hero__plus" aria-hidden="true">+</span>
+  <span class="hero__plus" aria-hidden="true">+</span>
+  <Image class="hero__skyline" src={skyline} alt="" width={1400} loading="eager" />
+
+  <div class="hero__body">
+    <Image class="hero__badge" src={badge} alt="" width={260} loading="eager" />
+
+    <h1 class="hero__title"><span>AWS</span>User Group</h1>
+    <p class="hero__location">{site.location}</p>
+    <p class="hero__tagline">{site.tagline}</p>
+
+    <div class="hero__actions">
+      <a class="btn btn--gold" href={site.rsvpUrl} target="_blank" rel="noopener">
+        RSVP next meetup →
+      </a>
+      <a class="btn btn--ghost" href="#speak">Give a talk</a>
+    </div>
+
+    {
+      nextEvent && (
+        <a class="hero__next" href={rsvpLink(nextEvent)} target="_blank" rel="noopener">
+          <span class="hero__dot" aria-hidden="true" />
+          <span>
+            Next meetup ·{' '}
+            <time datetime={nextEvent.data.startsAt.toISOString()}>
+              {formatEventDate(nextEvent.data.startsAt)}
+            </time>{' '}
+            · {nextEvent.data.title}
+          </span>
+        </a>
+      )
+    }
+  </div>
+</header>
