@@ -884,6 +884,122 @@ p {
   }
 }
 
+/* ------------------------------------------------------------- partners -- */
+
+.partners-section {
+  background: var(--c-surface);
+  border-block: 1px solid var(--c-border-soft);
+}
+
+.partners__intro {
+  max-width: 620px;
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--c-muted);
+}
+
+.partners__group {
+  margin-top: 32px;
+}
+
+.partners__group-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted-soft);
+}
+
+/* auto-fill, not auto-fit: a group holding a single partner keeps a card-sized
+   tile instead of stretching one card the full width of the row. */
+.partners {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.partner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 22px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-cream);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    translate 0.15s ease;
+}
+
+.partner:hover {
+  border-color: var(--c-gold);
+  box-shadow: var(--shadow-card);
+  translate: 0 -2px;
+}
+
+/* A white tile behind every logo. Partners supply artwork drawn for white, and
+   normalising the plate is what stops four different aspect ratios from reading
+   as four different card layouts. */
+.partner__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 68px;
+  margin-bottom: 4px;
+  padding: 12px 16px;
+  border: 1px solid var(--c-border-soft);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.partner__logo img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.partner__role {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-amber);
+}
+
+.partner__name {
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.partner__blurb {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--c-muted);
+}
+
+.partner__host {
+  margin-top: auto;
+  padding-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--c-muted-soft);
+}
+
+.partner:hover .partner__host {
+  color: var(--c-amber);
+}
+
 /* ---------------------------------------------------------------- speak -- */
 
 .speak__panel {

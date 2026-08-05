@@ -6,6 +6,7 @@ import GallerySection from '../components/GallerySection.astro';
 import Hero from '../components/Hero.astro';
 import Newsletter from '../components/Newsletter.astro';
 import NewsSection from '../components/NewsSection.astro';
+import PartnersSection from '../components/PartnersSection.astro';
 import SpeakCta from '../components/SpeakCta.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
@@ -48,6 +49,7 @@ const eventSchema = upcoming.map((event) => ({
   <NewsSection />
   <AboutSection />
   <GallerySection />
+  <PartnersSection />
   <SpeakCta />
   <Newsletter />
 </BaseLayout>
