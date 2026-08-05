@@ -70,7 +70,19 @@ appear once at least one photo exists.
 - The first photo occupies the tall left-hand tile; five photos fill the grid exactly.
 - Alt text comes from the filename: `03-live-demo-moment.jpg` → "Live demo moment".
   Rename the file to fix the caption.
-- Commit the originals — Astro resizes and converts them to WebP at build time.
+- The first tile is tall, so a **portrait** photo suits it best; the other four are wide.
+- Before committing, downscale the long edge to about 2000px and strip metadata. Astro
+  resizes and converts to WebP at build time, so a phone original is far larger than
+  anything the site serves — and camera EXIF usually carries the GPS coordinates of the
+  venue. One way, with the `sharp` already in `devDependencies`:
+
+  ```
+  sharp('IMG_1234.jpeg').rotate().resize(2000, 2000, { fit: 'inside' })
+    .jpeg({ quality: 82, mozjpeg: true }).toFile('src/assets/gallery/06-name.jpg')
+  ```
+
+  `.rotate()` with no argument applies the EXIF orientation before it is discarded —
+  without it, portrait phone shots land on their side.
 
 Get consent before publishing recognisable faces, and honour anyone who asked not to
 be photographed on the night.
