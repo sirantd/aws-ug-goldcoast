@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 
 import { site } from '../data/site';
+import { getNews } from '../lib/events';
 import { hasGallery } from '../lib/gallery';
 import badge from '../assets/brand/hex-badge.png';
 
@@ -9,9 +10,12 @@ import badge from '../assets/brand/hex-badge.png';
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html';
 const base = isHome ? '' : '/';
 
+/** News and Gallery hide themselves when empty; their anchors must follow suit. */
+const hasNews = (await getNews()).length > 0;
+
 const links = [
   { label: 'Events', href: `${base}#events`, show: true },
-  { label: 'News', href: `${base}#news`, show: true },
+  { label: 'News', href: `${base}#news`, show: hasNews },
   { label: 'About', href: `${base}#about`, show: true },
   { label: 'Gallery', href: `${base}#gallery`, show: hasGallery },
   { label: 'Speak', href: `${base}#speak`, show: true },
