@@ -1,9 +1,4 @@
-/**
- * The volunteers who run the group.
- *
- * TODO(organisers): replace these placeholders from the design mock with the
- * real crew before launch — see docs/CONTENT.md.
- */
+/** The volunteers who run the group. See docs/CONTENT.md. */
 
 export interface Organiser {
   name: string;
@@ -13,13 +8,24 @@ export interface Organiser {
 }
 
 export const organisers: Organiser[] = [
-  { name: 'Jordan Doe', role: 'Lead organiser' },
-  { name: 'Alex Smith', role: 'Co-organiser' },
-  { name: 'Priya K', role: 'Speaker wrangler' },
-  { name: 'Marcus T', role: 'Sponsorships' },
+  {
+    name: 'Dmytro Sirant',
+    role: 'Lead organiser',
+    url: 'https://www.linkedin.com/in/dmytro-sirant/',
+  },
+  {
+    name: 'Serhii Kaidalov',
+    role: 'Co-organiser',
+    url: 'https://www.linkedin.com/in/serhii-kaidalov/',
+  },
+  {
+    name: 'Renato Meireles',
+    role: 'Co-organiser',
+    url: 'https://www.linkedin.com/in/rcmeireles/',
+  },
 ];
 
-/** "Jordan Doe" -> "JD". Handles single-word and hyphenated names. */
+/** "Dmytro Sirant" -> "DS". Handles single-word and hyphenated names. */
 export function initials(name: string): string {
   return name
     .split(/[\s-]+/)

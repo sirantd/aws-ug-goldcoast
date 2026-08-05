@@ -783,6 +783,11 @@ p {
   list-style: none;
 }
 
+/* An odd count would otherwise leave a half-width gap on the final row. */
+.organiser:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .organiser {
   display: flex;
   flex-direction: column;
