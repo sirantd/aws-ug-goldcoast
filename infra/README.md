@@ -93,8 +93,55 @@ gh variable set S3_BUCKET --body "$(terraform output -raw bucket_name)"
 gh variable set CLOUDFRONT_DISTRIBUTION_ID --body "$(terraform output -raw distribution_id)"
 ```
 
-The workflow targets a `production` GitHub environment. Create it if you want a manual
-approval gate on deploys; otherwise the job runs unattended.
+The workflow targets a `production` GitHub environment, which must exist and is where
+the branch restriction lives:
+
+```bash
+gh api -X PUT repos/sirantd/aws-ug-goldcoast/environments/production \
+  --input - <<< '{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'
+gh api -X POST repos/sirantd/aws-ug-goldcoast/environments/production/deployment-branch-policies \
+  -f name=main -f type=branch
+```
+
+Add reviewers to that environment if you want a manual approval gate on deploys.
+
+### OIDC subject claim — read this before touching the trust policy
+
+Three things about `aws_iam_role.deploy` are non-obvious, and each one denies every
+deploy with the same unhelpful `Not authorized to perform sts:AssumeRoleWithWebIdentity`:
+
+1. **The environment changes the subject.** Because the job declares
+   `environment: production`, GitHub sends
+   `repo:OWNER/NAME:environment:production` — *not* the
+   `repo:OWNER/NAME:ref:refs/heads/main` form shown in most tutorials.
+
+2. **This repo gets the immutable subject claim**, which embeds numeric ids so a
+   rename cannot be used to impersonate the repo:
+   `repo:sirantd@15087953/aws-ug-goldcoast@1323494502:environment:production`.
+   Both forms are in the trust policy, so it works either way. If you fork or move the
+   repo, update `github_owner_id` and `github_repository_id`:
+
+   ```bash
+   gh api repos/OWNER/NAME --jq '{owner_id:.owner.id, repo_id:.id}'
+   ```
+
+3. **You cannot pin the branch in IAM.** Only `aud`, `sub` and `amr` are mapped from an
+   OIDC token into the IAM request context. Conditions on
+   `token.actions.githubusercontent.com:ref` or `:repository` match nothing and deny
+   everything. That is why the branch policy lives on the GitHub environment.
+
+To see what a run actually sends, add a step before the credentials action that decodes
+the claims (print claims only, never the token):
+
+```yaml
+- run: |
+    TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+      "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
+    echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq '{sub, aud, ref, environment}'
+```
+
+CloudTrail also records the subject on the failed `AssumeRoleWithWebIdentity`, but it
+renders it in the id-annotated form and lags several minutes.
 
 ### 5. First deploy
 
