@@ -80,5 +80,5 @@ export async function getNews(limit?: number): Promise<NewsItem[]> {
   return limit ? sorted.slice(0, limit) : sorted;
 }
 
-/** Per-event RSVP link when set, otherwise the group's Meetup page. */
+/** Per-event RSVP link when set, otherwise the group's Luma calendar. */
 export const rsvpLink = (event: Event) => event.data.rsvpUrl ?? site.rsvpUrl;

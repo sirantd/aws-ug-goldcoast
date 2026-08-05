@@ -17,8 +17,14 @@ export const site = {
   /** IANA zone every displayed date is rendered in, regardless of visitor locale. */
   timeZone: 'Australia/Brisbane',
 
-  /** Primary call to action, used by the nav and hero buttons. */
-  rsvpUrl: 'https://www.meetup.com/awsgoldcoast/',
+  /**
+   * Primary call to action, used by the nav and hero buttons and as the
+   * fallback for any event without its own `rsvpUrl`. Luma is where the group
+   * actually takes RSVPs; Meetup remains a channel in `channels.ts`.
+   */
+  rsvpUrl: 'https://luma.com/aws-ug-goldcoast',
+  /** "Full calendar" link. Same destination as `rsvpUrl` today, but a separate
+   * knob so the calendar can move without touching every RSVP button. */
   calendarUrl: 'https://luma.com/aws-ug-goldcoast',
   /** Where "Propose a talk" points — the group's Sessionize call for speakers. */
   proposeTalkUrl: 'https://sessionize.com/aws-user-group-gold-coast',

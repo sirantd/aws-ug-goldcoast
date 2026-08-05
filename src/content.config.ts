@@ -14,7 +14,7 @@ const events = defineCollection({
     startsAt: z.coerce.date(),
     venue: z.string(),
     venueUrl: z.url().optional(),
-    /** Per-event RSVP link. Falls back to the group's Meetup page. */
+    /** Per-event RSVP link. Falls back to the group's Luma calendar. */
     rsvpUrl: z.url().optional(),
     /** One or two sentences shown on the event card. */
     blurb: z.string(),
