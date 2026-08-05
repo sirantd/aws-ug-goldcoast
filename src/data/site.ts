@@ -18,8 +18,8 @@ export const site = {
   timeZone: 'Australia/Brisbane',
 
   /** Primary call to action, used by the nav and hero buttons. */
-  rsvpUrl: 'https://www.meetup.com/aws-user-group-gold-coast/',
-  calendarUrl: 'https://lu.ma/aws-ug-goldcoast',
+  rsvpUrl: 'https://www.meetup.com/awsgoldcoast/',
+  calendarUrl: 'https://luma.com/aws-ug-goldcoast',
   /** Where "Propose a talk" points. Swap for a Google Form / Sessionize link. */
   proposeTalkUrl: 'mailto:hello@aws-ug-goldcoast.com.au?subject=Talk%20proposal',
   contactEmail: 'hello@aws-ug-goldcoast.com.au',

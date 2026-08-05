@@ -55,11 +55,11 @@ Edit `src/data/organisers.ts`. Avatar initials are derived from the name; `url` 
 optional and turns the name into a link.
 
 ```ts
-{ name: 'Jordan Doe', role: 'Lead organiser', url: 'https://linkedin.com/in/…' },
+{ name: 'Ada Lovelace', role: 'Co-organiser', url: 'https://linkedin.com/in/…' },
 ```
 
-> The four names currently listed came from the design mock and **need replacing with
-> the real organiser team.**
+The cards sit in a two-column grid; an odd final card stretches across both columns, so
+any number of organisers fills the row cleanly.
 
 ## Photos
 
