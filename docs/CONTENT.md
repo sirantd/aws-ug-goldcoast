@@ -61,6 +61,52 @@ optional and turns the name into a link.
 The cards sit in a two-column grid; an odd final card stretches across both columns, so
 any number of organisers fills the row cleanly.
 
+## Friends, partners and sponsors
+
+Edit `src/data/partners.ts`. Each group is a heading with a row of cards under it, and
+array order is display order — both within a group and between groups.
+
+```ts
+{
+  title: 'Partners & sponsors',
+  partners: [
+    { name: 'Cohort Innovative Space', url: 'https://cohortspace.com.au/',
+      logo: cohortLogo, role: 'Venue partner',
+      blurb: 'Hosts the meetups in their Southport space.' },
+  ],
+},
+```
+
+`role` is the short mono label above the name; `blurb` is one sentence on what they do
+for the group. The bottom line of the card is the domain, derived from `url`, so there is
+nothing to keep in sync. **Link to a page that outlives a single event** — a homepage or
+a Luma calendar, not one dated meetup.
+
+`logo` is optional; a partner without one still gets a card, since the name is shown
+either way. Never draw a wordmark for a brand that has not supplied artwork.
+
+To add one, drop the file in `src/assets/partners/` and import it at the top of
+`partners.ts`. Both raster and SVG imports work, and both are typed `ImageMetadata`:
+
+```ts
+import cohortLogo from '../assets/partners/cohort.png';
+```
+
+Logos sit on a white plate 68px tall and are scaled to fit, so any aspect ratio works —
+but ask for artwork **drawn for a white background**, and trim the surrounding
+whitespace before committing so the mark fills the plate:
+
+```
+sharp('logo-export.png').trim({ threshold: 12 }).png({ palette: true })
+  .toFile('src/assets/partners/name.png')
+```
+
+Do not upscale: anything above about 200px on the long edge is already more than the
+card renders.
+
+A friend's meetup that is worth flagging is an announcement, not a partner entry — post
+it under "Post an announcement" above so it carries a date.
+
 ## Photos
 
 Drop image files into `src/assets/gallery/`. The gallery section and its nav link only

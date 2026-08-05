@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+
+import { displayHost, partnerGroups } from '../data/partners';
+---
+
+<section id="partners" class="partners-section">
+  <div class="wrap section">
+    <h2 class="section-title">
+      Friends &amp; <strong>partners</strong>
+    </h2>
+
+    <p class="partners__intro">
+      The meetups are free because other people make them possible — a venue, a sponsor,
+      a neighbouring user group swapping speakers with us.
+    </p>
+
+    {
+      partnerGroups.map((group) => (
+        <div class="partners__group">
+          <h3 class="partners__group-title">{group.title}</h3>
+
+          <ul class="partners">
+            {group.partners.map((partner) => (
+              <li>
+                <a class="partner" href={partner.url} target="_blank" rel="noopener">
+                  {/* Decorative: the name follows in text, so announcing the logo
+                      too would just repeat it. */}
+                  {partner.logo && (
+                    <span class="partner__logo">
+                      <Image src={partner.logo} alt="" width={220} layout="none" loading="lazy" />
+                    </span>
+                  )}
+
+                  <span class="partner__role">{partner.role}</span>
+                  <span class="partner__name">{partner.name}</span>
+                  <span class="partner__blurb">{partner.blurb}</span>
+                  <span class="partner__host">{displayHost(partner.url)} ↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
