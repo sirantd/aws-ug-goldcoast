@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
+    env:
+      # Empty until `terraform apply` has run and the repository variables are
+      # set — see infra/README.md. Until then the build still runs and the
+      # publish steps are skipped rather than failing red.
+      CONFIGURED: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
+
     steps:
       - uses: actions/checkout@v7
 
@@ -31,10 +37,14 @@ jobs:
 
       - run: npm ci
 
+      - name: Type-check
+        run: npm run check
+
       - name: Build
         run: npm run build
 
       - name: Assume deploy role
+        if: env.CONFIGURED == 'true'
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
@@ -44,6 +54,7 @@ jobs:
       # Fingerprinted assets first, so every object a new page references is in
       # place before the HTML that points at it goes live.
       - name: Upload immutable assets
+        if: env.CONFIGURED == 'true'
         run: |
           aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}/" \
             --no-progress \
@@ -54,6 +65,7 @@ jobs:
       # `_astro/` is excluded from the prune: a visitor mid-navigation may still
       # be fetching assets referenced by the previous build.
       - name: Upload pages
+        if: env.CONFIGURED == 'true'
         run: |
           aws s3 sync dist/ "s3://${{ vars.S3_BUCKET }}/" \
             --no-progress --delete \
@@ -61,6 +73,7 @@ jobs:
             --cache-control 'public, max-age=300, must-revalidate'
 
       - name: Invalidate CloudFront
+        if: env.CONFIGURED == 'true'
         run: |
           ID=$(aws cloudfront create-invalidation \
             --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
@@ -73,10 +86,27 @@ jobs:
 
       - name: Summary
         run: |
-          {
-            echo "### Deployed"
-            echo
-            echo "- commit: \`${GITHUB_SHA::7}\`"
-            echo "- bucket: \`${{ vars.S3_BUCKET }}\`"
-            echo "- distribution: \`${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}\`"
-          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$CONFIGURED" = 'true' ]; then
+            {
+              echo "### Deployed"
+              echo
+              echo "- commit: \`${GITHUB_SHA::7}\`"
+              echo "- bucket: \`${{ vars.S3_BUCKET }}\`"
+              echo "- distribution: \`${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}\`"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo "### Build succeeded, publish skipped"
+              echo
+              echo "The AWS infrastructure has not been provisioned yet, so there is"
+              echo "nowhere to publish to. Follow \`infra/README.md\`, then set these"
+              echo "as repository variables:"
+              echo
+              echo '- `AWS_DEPLOY_ROLE_ARN`'
+              echo '- `AWS_REGION`'
+              echo '- `S3_BUCKET`'
+              echo '- `CLOUDFRONT_DISTRIBUTION_ID`'
+              echo
+              echo "Deploys start on the next push to \`main\`."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
