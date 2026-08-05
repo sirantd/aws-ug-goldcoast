@@ -77,9 +77,13 @@ be photographed on the night.
 
 ## Links, wording and the newsletter
 
-`src/data/site.ts` holds the domain, tagline, contact email, Meetup and Luma links, and
-where "Propose a talk" points. `src/data/channels.ts` holds the social links used in the
-link row and footer.
+`src/data/site.ts` holds the domain, tagline, the Meetup and Luma links, where "Propose a
+talk" points (the group's Sessionize page), and `contactUrl` — how people reach the
+organisers in writing. `src/data/channels.ts` holds the social links used in the link row
+and footer.
+
+The group has no mailbox, so `contactUrl` is the LinkedIn page. If a real address is set
+up later, point it at a `mailto:` instead and reword the Code of Conduct link text.
 
 The newsletter section is **hidden until it is configured**, because static hosting
 cannot process a form submission itself. To turn it on, set the provider's form endpoint
@@ -98,5 +102,5 @@ the provider's embed snippet for the field name — Mailchimp, for example, uses
 
 ## Code of conduct
 
-`src/pages/code-of-conduct.astro`. Adapted from the Contributor Covenant; reporting
-goes to the address in `site.contactEmail`.
+`src/pages/code-of-conduct.astro`. Adapted from the Contributor Covenant; reporting is to
+an organiser in person, or through `site.contactUrl`.

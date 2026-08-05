@@ -20,9 +20,13 @@ export const site = {
   /** Primary call to action, used by the nav and hero buttons. */
   rsvpUrl: 'https://www.meetup.com/awsgoldcoast/',
   calendarUrl: 'https://luma.com/aws-ug-goldcoast',
-  /** Where "Propose a talk" points. Swap for a Google Form / Sessionize link. */
-  proposeTalkUrl: 'mailto:hello@aws-ug-goldcoast.com.au?subject=Talk%20proposal',
-  contactEmail: 'hello@aws-ug-goldcoast.com.au',
+  /** Where "Propose a talk" points — the group's Sessionize call for speakers. */
+  proposeTalkUrl: 'https://sessionize.com/aws-user-group-gold-coast',
+  /**
+   * How to reach the organisers in writing, used by the Code of Conduct's
+   * reporting section. The group has no mailbox, so this is the LinkedIn page.
+   */
+  contactUrl: 'https://www.linkedin.com/company/aws-gold-coast/',
 
   /**
    * Newsletter sign-up. Static hosting cannot process a form itself, so this
