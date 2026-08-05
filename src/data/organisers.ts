@@ -23,7 +23,11 @@ export const organisers: Organiser[] = [
     role: 'Co-organiser',
     url: 'https://www.linkedin.com/in/rcmeireles/',
   },
-  { name: 'Gabriela Amaral', role: 'Co-organiser' },
+  {
+    name: 'Gabriela Amaral',
+    role: 'Co-organiser',
+    url: 'https://www.linkedin.com/in/amaralg/',
+  },
 ];
 
 /** "Dmytro Sirant" -> "DS". Handles single-word and hyphenated names. */
