@@ -50,6 +50,16 @@ variable "github_deploy_ref" {
   default     = "refs/heads/main"
 }
 
+variable "github_environment" {
+  description = <<-EOT
+    GitHub environment the deploy job runs in. This is part of the OIDC subject
+    claim — a job declaring `environment: X` gets sub `repo:owner/name:environment:X`
+    rather than the `ref:` form — so it must match the workflow.
+  EOT
+  type        = string
+  default     = "production"
+}
+
 variable "create_github_oidc_provider" {
   description = <<-EOT
     Create the GitHub Actions OIDC provider in this account. Set to false if the

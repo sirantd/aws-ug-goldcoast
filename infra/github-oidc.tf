@@ -38,11 +38,19 @@ data "aws_iam_policy_document" "deploy_assume_role" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # Pinned to one repo and one ref — a fork or a feature branch cannot deploy.
+    # The deploy job declares `environment: production`, so GitHub issues the
+    # token with sub `repo:owner/name:environment:NAME` — the `ref:` form is
+    # never sent for such a job.
+    #
+    # Only `aud`, `sub` and `amr` are mapped from an OIDC token into the IAM
+    # request context, so the branch cannot be pinned here: a condition on
+    # `:ref` or `:repository` matches nothing and denies every request. The
+    # branch restriction lives on the GitHub environment's deployment branch
+    # policy instead (`main` only) — see infra/README.md.
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repository}:ref:${var.github_deploy_ref}"]
+      values   = ["repo:${var.github_repository}:environment:${var.github_environment}"]
     }
   }
 }
