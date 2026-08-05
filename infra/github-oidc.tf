@@ -20,6 +20,14 @@ data "aws_iam_openid_connect_provider" "github" {
 
 locals {
   github_oidc_arn = var.create_github_oidc_provider ? aws_iam_openid_connect_provider.github[0].arn : data.aws_iam_openid_connect_provider.github[0].arn
+
+  github_owner = split("/", var.github_repository)[0]
+  github_name  = split("/", var.github_repository)[1]
+
+  oidc_subject_plain     = "repo:${var.github_repository}:environment:${var.github_environment}"
+  oidc_subject_immutable = "repo:${local.github_owner}@${var.github_owner_id}/${local.github_name}@${var.github_repository_id}:environment:${var.github_environment}"
+
+  oidc_subjects = var.github_owner_id == null || var.github_repository_id == null ? [local.oidc_subject_plain] : [local.oidc_subject_plain, local.oidc_subject_immutable]
 }
 
 data "aws_iam_policy_document" "deploy_assume_role" {
@@ -38,19 +46,26 @@ data "aws_iam_policy_document" "deploy_assume_role" {
       values   = ["sts.amazonaws.com"]
     }
 
-    # The deploy job declares `environment: production`, so GitHub issues the
-    # token with sub `repo:owner/name:environment:NAME` — the `ref:` form is
-    # never sent for such a job.
+    # Two things shape this subject, and both were learned the hard way:
     #
-    # Only `aud`, `sub` and `amr` are mapped from an OIDC token into the IAM
-    # request context, so the branch cannot be pinned here: a condition on
-    # `:ref` or `:repository` matches nothing and denies every request. The
-    # branch restriction lives on the GitHub environment's deployment branch
-    # policy instead (`main` only) — see infra/README.md.
+    # 1. The deploy job declares `environment: production`, so GitHub issues
+    #    `…:environment:NAME`. The `ref:` form is never sent for such a job.
+    # 2. This repo gets the *immutable* subject claim, which embeds the numeric
+    #    owner and repository ids so the trust survives (and is not fooled by) a
+    #    rename: `repo:owner@OWNER_ID/name@REPO_ID:environment:NAME`.
+    #
+    # Both forms are listed because StringEquals ORs its values — the plain form
+    # is what an org sees with the immutable claim turned off, so this keeps
+    # working either way.
+    #
+    # The branch cannot be pinned here: only `aud`, `sub` and `amr` are mapped
+    # from an OIDC token into the IAM request context, so a condition on `:ref`
+    # or `:repository` matches nothing and denies everything. That restriction
+    # lives on the GitHub environment's deployment branch policy (`main` only).
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repository}:environment:${var.github_environment}"]
+      values   = local.oidc_subjects
     }
   }
 }

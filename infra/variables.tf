@@ -50,6 +50,22 @@ variable "github_deploy_ref" {
   default     = "refs/heads/main"
 }
 
+variable "github_owner_id" {
+  description = <<-EOT
+    Numeric GitHub account id of the repository owner, from
+    `gh api repos/OWNER/NAME --jq .owner.id`. Used to build the immutable OIDC
+    subject claim; leave null to trust only the plain (rename-sensitive) form.
+  EOT
+  type        = number
+  default     = 15087953
+}
+
+variable "github_repository_id" {
+  description = "Numeric GitHub repository id, from `gh api repos/OWNER/NAME --jq .id`."
+  type        = number
+  default     = 1323494502
+}
+
 variable "github_environment" {
   description = <<-EOT
     GitHub environment the deploy job runs in. This is part of the OIDC subject
