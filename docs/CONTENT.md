@@ -22,7 +22,7 @@ blurb: Lambda, API Gateway and DynamoDB patterns that keep the bill near zero.
 | `startsAt` | yes | **Always include the `+10:00` offset.** Queensland does not observe DST |
 | `venue` | yes | Shown next to the pin icon |
 | `venueUrl` | no | Makes the venue name a link |
-| `rsvpUrl` | no | Per-event link; defaults to the group's Meetup page |
+| `rsvpUrl` | no | Per-event link; defaults to the group's Luma calendar |
 | `blurb` | yes | One or two sentences on the card |
 | `recapUrl` | no | Recording or slides, shown once the event has passed |
 | `draft` | no | `true` hides it from the built site |
@@ -77,10 +77,12 @@ be photographed on the night.
 
 ## Links, wording and the newsletter
 
-`src/data/site.ts` holds the domain, tagline, the Meetup and Luma links, where "Propose a
-talk" points (the group's Sessionize page), and `contactUrl` — how people reach the
-organisers in writing. `src/data/channels.ts` holds the social links used in the link row
-and footer.
+`src/data/site.ts` holds the domain, tagline, `rsvpUrl` and `calendarUrl` (both the Luma
+calendar — RSVPs go to Luma, not Meetup), where "Propose a talk" points (the group's
+Sessionize page), and `contactUrl` — how people reach the organisers in writing.
+
+`src/data/channels.ts` holds the social links used in the link row and footer. **Array
+order is display order**, currently Luma, LinkedIn, YouTube, Meetup.
 
 The group has no mailbox, so `contactUrl` is the LinkedIn page. If a real address is set
 up later, point it at a `mailto:` instead and reword the Code of Conduct link text.
