@@ -29,6 +29,21 @@ output "acm_validation_records" {
   ]
 }
 
+output "awsug_zone_id" {
+  description = "Hosted zone id for the delegated awsug.org.au subdomain."
+  value       = aws_route53_zone.awsug.zone_id
+}
+
+output "awsug_name_servers" {
+  description = <<-EOT
+    Name servers for the delegated subdomain. Send these to the awsug.org.au
+    administrator, who creates one NS record per hostname at the subdomain in
+    the parent zone. Delegation is by hostname, not by IP address — Route53's
+    name servers are anycast and their addresses are not stable.
+  EOT
+  value       = aws_route53_zone.awsug.name_servers
+}
+
 output "cloudflare_site_records" {
   description = "DNS records to create in Cloudflare (proxy off) so the domain serves the site."
   value = [

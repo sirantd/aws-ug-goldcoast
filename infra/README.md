@@ -1,8 +1,10 @@
 # Infrastructure
 
 S3 (private) → CloudFront (OAC) → `aws-ug-goldcoast.com.au`, with an IAM role that
-GitHub Actions assumes over OIDC to publish. DNS is on Cloudflare, so the two DNS
-steps below are manual.
+GitHub Actions assumes over OIDC to publish. DNS for the primary domain is on
+Cloudflare, so the two DNS steps below are manual. A second name,
+`goldcoast.awsug.org.au`, is delegated to a Route 53 zone in this account — see
+[The goldcoast.awsug.org.au subdomain](#the-goldcoastawsugorgau-subdomain).
 
 ```
                          ┌────────────────────────┐
@@ -24,6 +26,7 @@ steps below are manual.
 | `s3.tf` | Content bucket: private, versioned, encrypted, CloudFront-only read |
 | `cloudfront.tf` | Distribution, cache and security-header policies, URL-rewrite function |
 | `acm.tf` | Certificate in us-east-1 with DNS validation |
+| `route53.tf` | Hosted zone for the delegated `goldcoast.awsug.org.au`, plus its records |
 | `github-oidc.tf` | OIDC provider and the deploy role, pinned to this repo and `main` |
 | `functions/rewrite-urls.js` | Maps `/code-of-conduct` to `/code-of-conduct.html` |
 
@@ -148,6 +151,62 @@ renders it in the id-annotated form and lags several minutes.
 Push to `main`, or run the Deploy workflow manually. Before DNS is cut over you can
 check the result on the CloudFront hostname from
 `terraform output distribution_domain_name`.
+
+## The goldcoast.awsug.org.au subdomain
+
+A second name for the same site, delegated to us from the national `awsug.org.au`
+zone. The primary domain does not change: pages are built with a canonical tag
+pointing at `aws-ug-goldcoast.com.au`, so this name is an alias in the eyes of a
+search engine rather than a competing copy.
+
+Delegation is one-directional — we hold the child zone, someone else holds the
+parent — so it lands in two steps with a wait in between.
+
+### 1. Hand over the name servers
+
+```bash
+terraform output awsug_name_servers
+```
+
+Send those four hostnames to the `awsug.org.au` administrator. They create **one
+`NS` record set at `goldcoast.awsug.org.au`** in the parent zone, with all four
+hostnames as values. `awsug.org.au` is itself on Route 53, so on their side this
+is a single record set.
+
+Delegation is by hostname, never by IP address: Route 53's name servers are
+anycast and their addresses are not stable. No glue records are needed either —
+the `awsdns-*` names sit outside the zone being delegated, so resolvers look them
+up independently.
+
+### 2. Turn the name on
+
+Wait until the parent actually answers:
+
+```bash
+dig +short NS goldcoast.awsug.org.au @1.1.1.1
+```
+
+Nothing back means the delegation is not live yet. Do not skip this — ACM
+validates by resolving the record from the public internet, so enabling the name
+early leaves the apply sitting on `aws_acm_certificate_validation` until its
+60-minute timeout expires.
+
+Once it answers, set `serve_awsug_subdomain = true` in `terraform.tfvars` and:
+
+```bash
+terraform apply
+```
+
+That adds the name to the certificate, writes its validation record into our own
+zone (no human step this time), adds the CloudFront alias, and points `A` and
+`AAAA` alias records at the distribution.
+
+Adding a name replaces the certificate. `create_before_destroy` means the new one
+is issued before the old is dropped, and ACM reuses a validation token it has
+already issued for a name, so the two Cloudflare records for the primary domain
+keep working untouched. Check the plan before applying anyway — if ACM does hand
+back different values for those names, they need updating in Cloudflare by hand
+or the apply will wait for records that do not exist.
 
 ## Notes
 

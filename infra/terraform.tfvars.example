@@ -6,6 +6,13 @@
 # subject_alternative_names = ["www.aws-ug-goldcoast.com.au"]
 # github_repository         = "sirantd/aws-ug-goldcoast"
 
+# Second name for the same site, delegated from the national awsug.org.au zone.
+# The hosted zone exists either way; this flag only controls whether the site
+# answers on the name. Leave it false until `dig +short NS goldcoast.awsug.org.au`
+# returns the servers from the `awsug_name_servers` output — see README.
+# awsug_zone_name       = "goldcoast.awsug.org.au"
+# serve_awsug_subdomain = false
+
 # Set to false if this AWS account already has a GitHub Actions OIDC provider.
 # create_github_oidc_provider = true
 

@@ -9,7 +9,7 @@ resource "aws_acm_certificate" "site" {
   provider = aws.us_east_1
 
   domain_name               = var.domain_name
-  subject_alternative_names = var.subject_alternative_names
+  subject_alternative_names = local.certificate_sans
   validation_method         = "DNS"
 
   lifecycle {
@@ -22,6 +22,11 @@ resource "aws_acm_certificate_validation" "site" {
 
   certificate_arn         = aws_acm_certificate.site.arn
   validation_record_fqdns = [for option in aws_acm_certificate.site.domain_validation_options : option.resource_record_name]
+
+  # The Cloudflare records are created by hand, but the one for the delegated
+  # awsug.org.au subdomain is Terraform's own — without this edge nothing stops
+  # the wait starting before that record exists.
+  depends_on = [aws_route53_record.awsug_cert_validation]
 
   timeouts {
     # Long enough to add the CNAMEs in Cloudflare by hand without the apply

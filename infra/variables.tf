@@ -22,6 +22,28 @@ variable "subject_alternative_names" {
   default     = ["www.aws-ug-goldcoast.com.au"]
 }
 
+variable "awsug_zone_name" {
+  description = <<-EOT
+    Subdomain delegated to this group from the national awsug.org.au zone. We
+    hold the Route53 hosted zone; the awsug.org.au administrator holds the NS
+    records that point at it.
+  EOT
+  type        = string
+  default     = "goldcoast.awsug.org.au"
+}
+
+variable "serve_awsug_subdomain" {
+  description = <<-EOT
+    Serve the site on awsug_zone_name as well as the primary domain. Keep this
+    false until awsug.org.au has added the NS records from the
+    `awsug_name_servers` output: enabling it adds the name to the certificate,
+    and ACM cannot validate a name the public DNS cannot resolve, so the apply
+    would sit on aws_acm_certificate_validation until it times out.
+  EOT
+  type        = bool
+  default     = false
+}
+
 variable "price_class" {
   description = <<-EOT
     CloudFront price class. PriceClass_All is the only class that includes the
