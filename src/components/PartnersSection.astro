@@ -23,7 +23,7 @@ import { displayHost, partnerGroups } from '../data/partners';
           <ul class="partners">
             {group.partners.map((partner) => (
               <li>
-                <a class="partner" href={partner.url} target="_blank" rel="noopener">
+                <a class="partner" href={partner.url} target="_blank" rel="noopener noreferrer">
                   {/* Decorative: the name follows in text, so announcing the logo
                       too would just repeat it. */}
                   {partner.logo && (

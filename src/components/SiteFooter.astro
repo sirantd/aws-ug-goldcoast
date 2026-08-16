@@ -22,7 +22,7 @@ const domain = new URL(site.url).host;
       <div class="footer__links">
         {
           channels.map((channel) => (
-            <a href={channel.url} target="_blank" rel="noopener">
+            <a href={channel.url} target="_blank" rel="noopener noreferrer">
               {channel.name}
             </a>
           ))

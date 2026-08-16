@@ -4,12 +4,15 @@ import { site } from '../data/site';
 ---
 
 <BaseLayout title="Page not found" description="That page doesn't exist.">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
   <article class="wrap prose">
     <h1>404 — nothing here</h1>
     <p class="prose__lede">
       That link has gone the way of an untagged EC2 instance. Try the
       <a href="/">home page</a>, or head straight to
-      <a href={site.rsvpUrl} target="_blank" rel="noopener">our Luma calendar</a>
+      <a href={site.rsvpUrl} target="_blank" rel="noopener noreferrer">our Luma calendar</a>
       for the next event.
     </p>
   </article>

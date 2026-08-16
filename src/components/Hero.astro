@@ -28,7 +28,7 @@ const { nextEvent } = Astro.props;
     <p class="hero__tagline">{site.tagline}</p>
 
     <div class="hero__actions">
-      <a class="btn btn--gold" href={site.rsvpUrl} target="_blank" rel="noopener">
+      <a class="btn btn--gold" href={site.rsvpUrl} target="_blank" rel="noopener noreferrer">
         RSVP next meetup →
       </a>
       <a class="btn btn--ghost" href="#speak">Give a talk</a>
@@ -36,7 +36,7 @@ const { nextEvent } = Astro.props;
 
     {
       nextEvent && (
-        <a class="hero__next" href={rsvpLink(nextEvent)} target="_blank" rel="noopener">
+        <a class="hero__next" href={rsvpLink(nextEvent)} target="_blank" rel="noopener noreferrer">
           <span class="hero__dot" aria-hidden="true" />
           <span>
             Next meetup ·{' '}
