@@ -25,7 +25,7 @@ const rendered = await Promise.all(
             <div>
               <h3 class="news__title">
                 {item.data.url ? (
-                  <a href={item.data.url} target="_blank" rel="noopener">
+                  <a href={item.data.url} target="_blank" rel="noopener noreferrer">
                     {item.data.title}
                   </a>
                 ) : (
