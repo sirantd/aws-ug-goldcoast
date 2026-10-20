@@ -8,6 +8,7 @@ import Newsletter from '../components/Newsletter.astro';
 import NewsSection from '../components/NewsSection.astro';
 import PartnersSection from '../components/PartnersSection.astro';
 import SpeakCta from '../components/SpeakCta.astro';
+import VenueSection from '../components/VenueSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 import { getNextEvent, getUpcomingEvents, rsvpLink } from '../lib/events';
@@ -46,6 +47,7 @@ const eventSchema = upcoming.map((event) => ({
   <Hero nextEvent={nextEvent} />
   <ChannelRow />
   <EventsSection />
+  <VenueSection />
   <NewsSection />
   <AboutSection />
   <GallerySection />
