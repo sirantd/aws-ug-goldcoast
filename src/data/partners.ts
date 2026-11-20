@@ -5,7 +5,6 @@
  * docs/CONTENT.md.
  */
 
-import assemblyLogo from '../assets/partners/assembly.png';
 import cohortLogo from '../assets/partners/cohort.png';
 import jetbrainsLogo from '../assets/partners/jetbrains.svg';
 import perunLogo from '../assets/partners/perun.svg';
@@ -59,13 +58,6 @@ export const partnerGroups: PartnerGroup[] = [
         logo: perunLogo,
         role: 'AWS Partner',
         blurb: 'Cloud consultancy backing the group and sending engineers to speak.',
-      },
-      {
-        name: 'Assembly',
-        url: 'https://assembly.cloud',
-        logo: assemblyLogo,
-        role: 'AWS Partner',
-        blurb: 'Cloud consultancy supporting the meetups and the people who present at them.',
       },
       {
         name: 'JetBrains',
